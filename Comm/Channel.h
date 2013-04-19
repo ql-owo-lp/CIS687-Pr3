@@ -190,10 +190,10 @@ class Channel {
 			try {
 				std::string header;
 				// receiver will read one line
-				while (1) {
+				while (header != "quit") {
 					// first read one line from the socket, HTTP header
 					header = s.readLine();
-					if (header.empty()) {
+					if (header.empty() || header=="quit") {
 						// wait 1.5 sec to continue, prevent 100% CPU
 						::Sleep(1500);
 						continue;
@@ -305,6 +305,7 @@ class Channel {
 						ch.log("Connected to "+ msg.first.toString());
 					}
 					sendMsg(msg);
+					s.writeLine("quit");
 					s.disconnect();	// disconnect immediately after sending message every time
 					ch.log("Message sent! Disconnected with "+ msg.first.toString());
 				}
